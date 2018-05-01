@@ -1,7 +1,9 @@
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using Xunit;
 using StocksBot.StocksProviders.Models;
+using System.Collections.Generic;
 
 namespace StocksBot.UnitTests
 {
@@ -66,6 +68,16 @@ namespace StocksBot.UnitTests
         {
             var parsedData = JsonConvert.DeserializeObject<AlphaVantageTimeSeriesDailyResponse>(TimeSeriesDailyResponse);
             Assert.Equal("US/Eastern", parsedData.Metadata.TimeZone);
+        }
+
+        [Fact]
+        public void AlphaVantageTimeSeriesDailyResponse_Parsed_DataKeysAreCorrect()
+        {
+            var parsedData = JsonConvert.DeserializeObject<AlphaVantageTimeSeriesDailyResponse>(TimeSeriesDailyResponse);
+            Assert.Equal(parsedData.Data.Keys.ToHashSet(), new HashSet<DateTime> {
+                new DateTime(2018, 5, 1),
+                new DateTime(2018, 4, 30)
+            });
         }
     }
 }
