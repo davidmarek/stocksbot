@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  stocksbot:
+    image: ${DOCKER_REGISTRY}stocksbot
+    build:
+      context: .
+      dockerfile: StocksBot/Dockerfile
