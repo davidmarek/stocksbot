@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StocksBot.StocksProviders.Models
 {
@@ -10,6 +11,18 @@ namespace StocksBot.StocksProviders.Models
         public AlphaVantageTimeSeriesDailyMetadata Metadata { get; set; }
 
         [JsonProperty("Time Series (Daily)")]
-        public Dictionary<DateTime, object> Data { get; set; }
+        public Dictionary<DateTime, AlphaVantageDataPoint> Data { get; set; }
+
+        public DailyPrices ToDailyPrices()
+        {
+            return new DailyPrices
+            {
+                DataPoints = new Dictionary<DateTime, DataPoint>(
+                    this.Data.Select(
+                        dataPointPair => new KeyValuePair<DateTime, DataPoint>(
+                            dataPointPair.Key, 
+                            dataPointPair.Value.ToDataPoint())))
+            };
+        }
     }
 }
