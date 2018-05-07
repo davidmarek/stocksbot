@@ -11,7 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flurl" Version="2.7.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0-preview2-final" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-preview2-final" />
+    <PackageReference Include="Telegram.Bot" Version="14.3.0" />
   </ItemGroup>
 
 </Project>

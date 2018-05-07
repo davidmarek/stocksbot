@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using StocksBot.StocksProviders;
+using StocksBot.StocksProviders.Models;
 
 namespace StocksBot.Controllers
 {
@@ -10,11 +10,19 @@ namespace StocksBot.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IStockProvider stockProvider;
+
+        public ValuesController(IStockProvider stockProvider)
+        {
+            this.stockProvider = stockProvider;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<Company>> Get(CancellationToken cancellationToken)
         {
-            return new string[] { "value1", "value2" };
+            var company = await this.stockProvider.GetCompanyAsync("MSFT", cancellationToken);
+            return company;
         }
 
         // GET api/values/5
