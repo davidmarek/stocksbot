@@ -46,5 +46,28 @@ namespace StocksBot.StocksProviders
             var symbolDescriptions = JsonConvert.DeserializeObject<List<SymbolDescription>>(content);
             return symbolDescriptions;
         }
+
+        public async Task<Dictionary<string, BatchResponse>> GetQuotesAsync(IEnumerable<string> symbols, CancellationToken cancellationToken)
+        {
+            var url = new Flurl.Url(BaseUrl)
+                .AppendPathSegment("/stock/market/batch")
+                .SetQueryParams(new
+                {
+                    types = "quote",
+                    symbols = string.Join(',', symbols)
+                });
+            var httpClient = this.httpClientFactory.CreateClient();
+            var response = await httpClient.GetAsync(url, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var quotes = JsonConvert.DeserializeObject<Dictionary<string, BatchResponse>>(content);
+            return quotes;
+        }
+
+        public string GetLogo(string symbol)
+        {
+            return $"https://storage.googleapis.com/iex/api/logos/{symbol}.png";
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using StocksBot.StocksProviders;
@@ -10,44 +11,29 @@ namespace StocksBot.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IStockProvider stockProvider;
+        private readonly IStockProvider _stockProvider;
+        private readonly CompanyInfoProvider _companyInfoProvider;
 
-        public ValuesController(IStockProvider stockProvider)
+        public ValuesController(IStockProvider stockProvider, CompanyInfoProvider companyInfoProvider)
         {
-            this.stockProvider = stockProvider;
+            _stockProvider = stockProvider;
+            _companyInfoProvider = companyInfoProvider;
         }
 
         // GET api/values
         [HttpGet]
         public async Task<ActionResult<Company>> Get(CancellationToken cancellationToken)
         {
-            var company = await this.stockProvider.GetCompanyAsync("MSFT", cancellationToken);
+            var company = await _stockProvider.GetCompanyAsync("MSFT", cancellationToken);
+
             return company;
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<List<SymbolDescription>> Get(string id)
         {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return _companyInfoProvider.FindPrefix(id);
         }
     }
 }

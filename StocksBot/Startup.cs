@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StocksBot.StocksProviders;
 using StocksBot.Telegram;
+using System.Threading;
 
 namespace StocksBot
 {
@@ -26,6 +27,8 @@ namespace StocksBot
             services.AddTransient<IStockProvider, InvestorsExchangeStockProvider>();
             services.AddTransient<ITelegramBotClientFactory, TelegramBotClientFactory>();
             services.AddTransient<ITelegramBot, TelegramBot>();
+            services.AddTransient<IUpdateParser, UpdateParser>();
+            services.AddSingleton(sp => new CompanyInfoProvider(sp.GetService<IStockProvider>().GetSymbolsAsync(CancellationToken.None).GetAwaiter().GetResult()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
