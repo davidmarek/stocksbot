@@ -3,7 +3,7 @@ solution: StocksBot.sln
 mono: none
 dotnet: 2.1.300
 install:
-  - dotnet restore
+  - dotnet restore ./StocksBot.sln
 script:
   - dotnet build ./StocksBot.sln
   - dotnet test StocksBot.UnitTests/StocksBot.UnitTests.csproj
