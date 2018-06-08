@@ -9,6 +9,6 @@ namespace StocksBot.Telegram
     {
         public string Token { get; set; }
 
-        public string WebhookUrl { get; set; }
+        public string WebhookSecret { get; set; }
     }
 }

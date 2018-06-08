@@ -9,7 +9,7 @@ namespace StocksBot.UnitTests
 {
     public class CompanyInfoProviderTests
     {
-        private List<SymbolDescription> testData = new List<SymbolDescription>
+        private readonly List<SymbolDescription> testData = new List<SymbolDescription>
         {
             new SymbolDescription { Symbol = "A" },
             new SymbolDescription { Symbol = "AA" },

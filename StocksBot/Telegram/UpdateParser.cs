@@ -15,15 +15,15 @@ namespace StocksBot.Telegram
 {
     public class UpdateParser : IUpdateParser
     {
-        private readonly ITelegramBot _telegramBot;
-        private readonly IStockProvider _stockProvider;
-        private readonly CompanyInfoProvider _companyInfoProvider;
+        private readonly ITelegramBot telegramBot;
+        private readonly IStockProvider stockProvider;
+        private readonly CompanyInfoProvider companyInfoProvider;
 
         public UpdateParser(ITelegramBot telegramBot, IStockProvider stockProvider, CompanyInfoProvider companyInfoProvider)
         {
-            _telegramBot = telegramBot ?? throw new ArgumentNullException(nameof(telegramBot));
-            _stockProvider = stockProvider ?? throw new ArgumentNullException(nameof(stockProvider));
-            _companyInfoProvider = companyInfoProvider ?? throw new ArgumentNullException(nameof(companyInfoProvider));
+            this.telegramBot = telegramBot ?? throw new ArgumentNullException(nameof(telegramBot));
+            this.stockProvider = stockProvider ?? throw new ArgumentNullException(nameof(stockProvider));
+            this.companyInfoProvider = companyInfoProvider ?? throw new ArgumentNullException(nameof(companyInfoProvider));
         }
 
         public async Task ProcessUpdateAsync(Update update, CancellationToken cancellationToken)
@@ -31,12 +31,12 @@ namespace StocksBot.Telegram
             if (update.Type == TB.Enums.UpdateType.InlineQuery)
             {
                 var companies = GetCompaniesFromQuery(update);
-                var quotes = await _stockProvider.GetQuotesAsync(companies.Select(c => c.Symbol), cancellationToken);
+                var quotes = await this.stockProvider.GetQuotesAsync(companies.Select(c => c.Symbol), cancellationToken);
                 var results = new List<InlineQueryResultArticle>();
                 foreach (var company in companies)
                 {
                     var quote = quotes[company.Symbol].Quote;
-                    var logoUrl = _stockProvider.GetLogo(company.Symbol);
+                    var logoUrl = this.stockProvider.GetLogo(company.Symbol);
                     var title = $"{company.Name} ({company.Symbol})";
 
                     var us = CultureInfo.GetCultureInfo("en-US");
@@ -59,7 +59,7 @@ namespace StocksBot.Telegram
                     };
                     results.Add(result);
                 }
-                await _telegramBot.ReplyAsync(update.InlineQuery.Id, results, cancellationToken);
+                await this.telegramBot.ReplyAsync(update.InlineQuery.Id, results, cancellationToken);
             }
         }
 
@@ -72,12 +72,12 @@ namespace StocksBot.Telegram
                 var companies = new List<SymbolDescription>();
                 foreach (var symbol in new[] { "GOOG", "MSFT", "FB", "AMZN" })
                 {
-                    companies.AddRange(_companyInfoProvider.FindPrefix(symbol, 1));
+                    companies.AddRange(this.companyInfoProvider.FindPrefix(symbol, 1));
                 }
                 return companies;
             }
 
-            return _companyInfoProvider.FindPrefix(query.ToUpperInvariant(), 5);
+            return this.companyInfoProvider.FindPrefix(query.ToUpperInvariant(), 5);
         }
     }
 }

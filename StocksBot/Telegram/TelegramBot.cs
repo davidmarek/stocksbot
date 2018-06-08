@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Flurl;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +12,18 @@ namespace StocksBot.Telegram
 {
     public class TelegramBot : ITelegramBot
     {
-        private readonly ITelegramBotClientFactory _telegramBotClientFactory;
-        private readonly TelegramConfiguration _configuration;
+        private readonly ITelegramBotClientFactory telegramBotClientFactory;
+        private readonly TelegramConfiguration configuration;
 
         public TelegramBot(ITelegramBotClientFactory telegramBotClientFactory, IOptionsSnapshot<TelegramConfiguration> options)
         {
-            _telegramBotClientFactory = telegramBotClientFactory;
-            _configuration = options.Value;
-        }
-
-        public async Task RegisterWebhookAsync(CancellationToken cancellationToken)
-        {
-            var telegramBotClient = _telegramBotClientFactory.Create();
-            await telegramBotClient.SetWebhookAsync(_configuration.WebhookUrl, cancellationToken: cancellationToken);
+            this.telegramBotClientFactory = telegramBotClientFactory;
+            this.configuration = options.Value;
         }
 
         public async Task ReplyAsync(string inlineQueryId, IEnumerable<InlineQueryResultBase> result, CancellationToken cancellationToken)
         {
-            var telegramBotClient = _telegramBotClientFactory.Create();
+            var telegramBotClient = this.telegramBotClientFactory.Create();
             await telegramBotClient.AnswerInlineQueryAsync(inlineQueryId, result, cacheTime: 60, cancellationToken: cancellationToken);
         }
     }

@@ -11,20 +11,20 @@ namespace StocksBot.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IStockProvider _stockProvider;
-        private readonly CompanyInfoProvider _companyInfoProvider;
+        private readonly IStockProvider stockProvider;
+        private readonly CompanyInfoProvider companyInfoProvider;
 
         public ValuesController(IStockProvider stockProvider, CompanyInfoProvider companyInfoProvider)
         {
-            _stockProvider = stockProvider;
-            _companyInfoProvider = companyInfoProvider;
+            this.stockProvider = stockProvider;
+            this.companyInfoProvider = companyInfoProvider;
         }
 
         // GET api/values
         [HttpGet]
         public async Task<ActionResult<Company>> Get(CancellationToken cancellationToken)
         {
-            var company = await _stockProvider.GetCompanyAsync("MSFT", cancellationToken);
+            var company = await this.stockProvider.GetCompanyAsync("MSFT", cancellationToken);
 
             return company;
         }
@@ -33,7 +33,7 @@ namespace StocksBot.Controllers
         [HttpGet("{id}")]
         public ActionResult<List<SymbolDescription>> Get(string id)
         {
-            return _companyInfoProvider.FindPrefix(id);
+            return this.companyInfoProvider.FindPrefix(id);
         }
     }
 }

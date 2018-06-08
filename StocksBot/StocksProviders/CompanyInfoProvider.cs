@@ -8,12 +8,12 @@ namespace StocksBot.StocksProviders
 {
     public class CompanyInfoProvider
     {
-        private List<SymbolDescription> _symbolDescriptions;
+        private List<SymbolDescription> symbolDescriptions;
 
         public CompanyInfoProvider(List<SymbolDescription> symbolDescriptions)
         {
-            _symbolDescriptions = symbolDescriptions ?? throw new ArgumentNullException(nameof(symbolDescriptions));
-            _symbolDescriptions.Sort();
+            this.symbolDescriptions = symbolDescriptions ?? throw new ArgumentNullException(nameof(symbolDescriptions));
+            this.symbolDescriptions.Sort();
         }
 
         public void UpdateSymbolDescriptions(List<SymbolDescription> symbolDescriptions)
@@ -22,7 +22,7 @@ namespace StocksBot.StocksProviders
                 throw new ArgumentNullException(nameof(symbolDescriptions));
 
             symbolDescriptions.Sort();
-            _symbolDescriptions = symbolDescriptions;
+            this.symbolDescriptions = symbolDescriptions;
         }
 
         public List<SymbolDescription> FindPrefix(string symbolPrefix, int count = 50, int offset = 0)
@@ -34,23 +34,23 @@ namespace StocksBot.StocksProviders
             if (offset < 0)
                 throw new ArgumentOutOfRangeException(nameof(offset));
 
-            var index = _symbolDescriptions.BinarySearch(new SymbolDescription { Symbol = symbolPrefix });
+            var index = this.symbolDescriptions.BinarySearch(new SymbolDescription { Symbol = symbolPrefix });
             if (index < 0)
             {
                 index = ~index;
-                if (index == _symbolDescriptions.Count)
+                if (index == this.symbolDescriptions.Count)
                     return new List<SymbolDescription>();
             }
 
             var n = 0;
-            while (index + offset + n < _symbolDescriptions.Count 
+            while (index + offset + n < this.symbolDescriptions.Count 
                 && n < count
-                && _symbolDescriptions[index + offset + n].Symbol.StartsWith(symbolPrefix))
+                && this.symbolDescriptions[index + offset + n].Symbol.StartsWith(symbolPrefix))
             {
                 n++;
             }
 
-            return _symbolDescriptions.GetRange(index + offset, n);
+            return this.symbolDescriptions.GetRange(index + offset, n);
         }
     }
 }

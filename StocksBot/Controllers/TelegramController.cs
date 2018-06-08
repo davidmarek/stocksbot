@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using StocksBot.StocksProviders;
 using StocksBot.Telegram;
 using Telegram.Bot.Types;
@@ -11,28 +12,26 @@ namespace StocksBot.Controllers
     [Produces("application/json")]
     public class TelegramController : Controller
     {
-        private readonly ITelegramBot _telegramBot;
-        private readonly IUpdateParser _updateParser;
+        private readonly ITelegramBot telegramBot;
+        private readonly IUpdateParser updateParser;
+        private readonly TelegramConfiguration configuration;
 
-        public TelegramController(ITelegramBot telegramBot, IUpdateParser updateParser)
+        public TelegramController(ITelegramBot telegramBot, IUpdateParser updateParser, IOptionsSnapshot<TelegramConfiguration> options)
         {
-            _telegramBot = telegramBot;
-            _updateParser = updateParser;
+            this.telegramBot = telegramBot;
+            this.updateParser = updateParser;
+            this.configuration = options.Value;
         }
 
         [HttpPost]
-        [Route("api/telegram/update")]
-        public ActionResult Update([FromBody] Update update, CancellationToken cancellationToken)
+        [Route("api/telegram/{secret}/update")]
+        public ActionResult Update(string secret, [FromBody] Update update, CancellationToken cancellationToken)
         {
-            _updateParser.ProcessUpdateAsync(update, cancellationToken);
-            return Ok();
-        }
+            if (secret != this.configuration.WebhookSecret)
+                return this.BadRequest();
 
-        [Route("api/telegram/register")]
-        public async Task<ActionResult> RegisterWebhook(CancellationToken cancellationToken)
-        {
-            await _telegramBot.RegisterWebhookAsync(cancellationToken);
-            return Ok();
+            this.updateParser.ProcessUpdateAsync(update, cancellationToken);
+            return this.Ok();
         }
     }
 }

@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stocksbot
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: stocksbot
+  namespace: stocksbot
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: stocksbot
+    spec:
+      containers:
+        - name: stocksbot
+          image: davidmarek.azurecr.io/stocksbot:20180606082430
+          ports:
+          - containerPort: 80
+          env:
+          - name: Telegram__Token
+            valueFrom:
+              secretKeyRef:
+                name: stocksbot-secret
+                key: telegram-token
+          - name: Telegram__WebhookSecret
+            valueFrom:
+              secretKeyRef:
+                name: stocksbot-secret
+                key: telegram-update-secret 
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: stocksbot
+  namespace: stocksbot
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts: 
+    - stocksbot.davidmarek.cz
+    secretName: stocksbot-tls
+  rules:
+  - host: stocksbot.davidmarek.cz
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stocksbot
+          servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stocksbot
+  namespace: stocksbot
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: stocksbot
