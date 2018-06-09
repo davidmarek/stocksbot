@@ -15,6 +15,7 @@ namespace StocksBot.Controllers
     {
         private readonly ITelegramBot telegramBot;
         private readonly IUpdateParser updateParser;
+        private readonly IOptionsSnapshot<TelegramConfiguration> options;
         private readonly ILogger<TelegramController> logger;
         private readonly TelegramConfiguration configuration;
 
@@ -26,17 +27,17 @@ namespace StocksBot.Controllers
         {
             this.telegramBot = telegramBot;
             this.updateParser = updateParser;
+            this.options = options;
             this.logger = logger;
-            this.configuration = options.Value;
         }
 
         [HttpPost]
         [Route("api/telegram/{secret}/update")]
         public ActionResult Update(string secret, [FromBody] Update update, CancellationToken cancellationToken)
         {
-            if (secret != this.configuration.WebhookSecret)
+            if (secret != this.options.Value.WebhookSecret)
             {
-                this.logger.LogWarning("Invalid secret: {0}, expected {1}", secret, this.configuration.WebhookSecret);
+                this.logger.LogWarning("Invalid secret: {0}, expected {1}", secret, this.options.Value.WebhookSecret);
                 return this.BadRequest();
             }
 
