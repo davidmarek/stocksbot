@@ -17,7 +17,6 @@ namespace StocksBot.Controllers
         private readonly IUpdateParser updateParser;
         private readonly IOptionsSnapshot<TelegramConfiguration> options;
         private readonly ILogger<TelegramController> logger;
-        private readonly TelegramConfiguration configuration;
 
         public TelegramController(
             ITelegramBot telegramBot, 
