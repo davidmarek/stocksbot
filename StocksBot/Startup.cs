@@ -41,7 +41,6 @@ namespace StocksBot
             else
             {
                 app.UseHsts();
-                app.UseHttpsRedirection();
             }
             
             app.UseMvc();
