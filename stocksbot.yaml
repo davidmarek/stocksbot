@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: stocksbot
-          image: davidmarek.azurecr.io/stocksbot:20180608104246
+          image: davidmarek.azurecr.io/stocksbot:20180609082252
           ports:
           - containerPort: 80
           env:
