@@ -10,8 +10,8 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet restore
-- script: dotnet build --configuration $(buildConfiguration)
+- script: dotnet restore ./StocksBot.sln
+- script: dotnet build --configuration $(buildConfiguration) ./StocksBot.sln
   displayName: 'dotnet build $(buildConfiguration)'
 - task: DotNetCoreCLI@2
   inputs:
