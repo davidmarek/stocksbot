@@ -1,7 +1,7 @@
 language: csharp
 solution: StocksBot.sln
 mono: none
-dotnet: 2.2.100-preview1-009349
+dotnet: 2.1.300
 install:
   - dotnet restore ./StocksBot.sln
 script:
