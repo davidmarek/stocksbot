@@ -10,16 +10,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet restore ./StocksBot.sln
-  displayName: Restore Dependencies
-- script: dotnet build --configuration $(buildConfiguration) ./StocksBot.sln
-  displayName: 'Build $(buildConfiguration)'
-- task: DotNetCoreCLI@2
-  displayName: Run Tests
-  inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--logger trx --collect "Code coverage"'
+- script: |
+    dotnet restore ./StocksBot.sln
+    dotnet build --configuration $(buildConfiguration) ./StocksBot.sln
+    dotnet test StocksBot.UnitTests --configuration $(buildConfiguration) --logger trx --collect "Code coverage"
+    
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
