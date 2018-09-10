@@ -10,6 +10,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: '2.2.100-preview1-009349' 
 - script: dotnet restore ./StocksBot.sln
 - script: dotnet build --configuration $(buildConfiguration) ./StocksBot.sln
   displayName: 'dotnet build $(buildConfiguration)'
