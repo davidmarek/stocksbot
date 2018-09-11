@@ -41,11 +41,6 @@ steps:
 
 - task: Docker@1
   inputs:
-    command: 'tag'
-    imageName: '$(dockerId).azurecr.io/$(imageName)'
-
-- task: Docker@1
-  inputs:
     command: 'login'
     azureSubscriptionEndpoint: 'davidmarek_registry'
     azureContainerRegistry: $(dockerId).azurecr.io
@@ -53,5 +48,4 @@ steps:
 - task: Docker@1
   inputs:
     command: 'push'
-    azureSubscriptionEndpoint: 'davidmarek_registry'
-    azureContainerRegistry: $(dockerId).azurecr.io
+    imageName: '$(dockerId).azurecr.io/$(imageName)'
