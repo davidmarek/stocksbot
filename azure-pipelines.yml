@@ -14,8 +14,11 @@ steps:
     dotnet restore ./StocksBot.sln
     dotnet build --configuration $(buildConfiguration) ./StocksBot.sln
     dotnet test StocksBot.UnitTests --configuration $(buildConfiguration) --logger trx --collect "Code coverage"
-    
+    dotnet publish --output $(Build.ArtifactStagingDirectory)
+
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
+
+- task: PublishBuildArtifacts@1
