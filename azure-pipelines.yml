@@ -42,7 +42,7 @@ steps:
 - task: Docker@1
   inputs:
     command: 'login'
-    azureSubscriptionEndpoint: 'davidmarek_registry'
+    azureSubscription: 'davidmarek_registry'
     azureContainerRegistry: $(dockerId)
 
 - task: Docker@1
