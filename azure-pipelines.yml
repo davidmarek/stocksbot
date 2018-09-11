@@ -23,6 +23,7 @@ steps:
   inputs:
     command: 'build'
     projects: 'StocksBot.sln'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: DotNet Test
@@ -30,6 +31,7 @@ steps:
     command: 'test'
     projects: 'StocksBot.UnitTests'
     publishTestResults: true
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: DotNet Publish
@@ -37,6 +39,7 @@ steps:
     command: 'publish'
     projects: 'StocksBot.sln'
     publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
 
@@ -44,6 +47,7 @@ steps:
   displayName: DockerCompose Build
   inputs:
     action: 'build'
+    dockerComposeFile: '**/docker-compose.yml' 
 
 - task: Docker@1
   displayName: Docker Login
