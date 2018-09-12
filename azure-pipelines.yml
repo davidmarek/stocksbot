@@ -46,7 +46,7 @@ steps:
 - task: DockerCompose@0
   displayName: DockerCompose Build
   inputs:
-    action: 'Build Services'
+    action: 'Build services'
     dockerComposeFile: 'docker-compose.yml'
     workingDirectory: $(Build.SourcesDirectory)
 
