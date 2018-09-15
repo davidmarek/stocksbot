@@ -8,7 +8,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  imageName: 'stocksbot:$(Build.BuildId)'
+  imageName: 'stocksbot:$(Build.BuildNumber)'
 
 steps:
 
