@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 
 pool:
-  vmImage: 'VS2017-Win2016'
+  vmImage: 'Ubuntu 16.04'
 
 variables:
   buildConfiguration: 'Release'
@@ -50,12 +50,11 @@ steps:
     dockerComposeFile: 'docker-compose.yml'
     workingDirectory: $(Build.SourcesDirectory)
 
-- task: Docker@1
+- script: docker login -u $(dockerId) -p $(pswd) $(dockerId).azurecr.io
   displayName: Docker Login
-  inputs:
-    command: 'login'
-    azureSubscription: 'davidmarek_registry'
-    azureContainerRegistry: $(dockerId)
+
+- script: docker tag stocksbot $(dockerId).azurecr.io/$(imageName)
+  displayName: Docker Tag
 
 - task: Docker@1
   displayName: Docker Push
