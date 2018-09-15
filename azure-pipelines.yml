@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 
 pool:
-  vmImage: 'VS2017-Win2016'
+  vmImage: 'Ubuntu 16.04'
 
 variables:
   buildConfiguration: 'Release'
@@ -12,36 +12,36 @@ variables:
 
 steps:
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'DotNet Restore'
-#   inputs:
-#     command: 'restore'
-#     projects: 'StocksBot.sln'
+- task: DotNetCoreCLI@2
+  displayName: 'DotNet Restore'
+  inputs:
+    command: 'restore'
+    projects: 'StocksBot.sln'
 
-# - task: DotNetCoreCLI@2
-#   displayName: DotNet Build
-#   inputs:
-#     command: 'build'
-#     projects: 'StocksBot.sln'
-#     arguments: '--configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: DotNet Build
+  inputs:
+    command: 'build'
+    projects: 'StocksBot.sln'
+    arguments: '--configuration $(buildConfiguration)'
 
-# - task: DotNetCoreCLI@2
-#   displayName: DotNet Test
-#   inputs:
-#     command: 'test'
-#     projects: 'StocksBot.UnitTests'
-#     publishTestResults: true
-#     arguments: '--configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: DotNet Test
+  inputs:
+    command: 'test'
+    projects: 'StocksBot.UnitTests'
+    publishTestResults: true
+    arguments: '--configuration $(buildConfiguration)'
 
-# - task: DotNetCoreCLI@2
-#   displayName: DotNet Publish
-#   inputs:
-#     command: 'publish'
-#     projects: 'StocksBot.sln'
-#     publishWebProjects: false
-#     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+- task: DotNetCoreCLI@2
+  displayName: DotNet Publish
+  inputs:
+    command: 'publish'
+    projects: 'StocksBot.sln'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 
-# - task: PublishBuildArtifacts@1
+- task: PublishBuildArtifacts@1
 
 - task: DockerCompose@0
   displayName: DockerCompose Build
