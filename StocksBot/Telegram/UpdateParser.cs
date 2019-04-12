@@ -30,7 +30,7 @@ namespace StocksBot.Telegram
         {
             if (update.Type == TB.Enums.UpdateType.InlineQuery)
             {
-                var companies = GetCompaniesFromQuery(update);
+                var companies = this.GetCompaniesFromQuery(update);
                 var quotes = await this.stockProvider.GetQuotesAsync(companies.Select(c => c.Symbol), cancellationToken);
                 var results = new List<InlineQueryResultArticle>();
                 foreach (var company in companies)

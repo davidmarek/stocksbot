@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace StocksBot.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : Controller
     {
         private readonly IStockProvider stockProvider;
         private readonly CompanyInfoProvider companyInfoProvider;
@@ -20,7 +21,6 @@ namespace StocksBot.Controllers
             this.companyInfoProvider = companyInfoProvider;
         }
 
-        // GET api/values
         [HttpGet]
         public async Task<ActionResult<Company>> Get(CancellationToken cancellationToken)
         {
@@ -29,11 +29,16 @@ namespace StocksBot.Controllers
             return company;
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<List<SymbolDescription>> Get(string id)
+        public IActionResult Get([StringLength(10)] string id)
         {
-            return this.companyInfoProvider.FindPrefix(id);
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest();
+            }
+
+            var normalizedId = id.ToUpper();
+            return this.Ok(this.companyInfoProvider.FindPrefix(normalizedId));
         }
     }
 }

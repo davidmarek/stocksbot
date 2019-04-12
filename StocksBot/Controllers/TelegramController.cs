@@ -13,18 +13,15 @@ namespace StocksBot.Controllers
     [Produces("application/json")]
     public class TelegramController : Controller
     {
-        private readonly ITelegramBot telegramBot;
         private readonly IUpdateParser updateParser;
         private readonly IOptionsSnapshot<TelegramConfiguration> options;
         private readonly ILogger<TelegramController> logger;
 
         public TelegramController(
-            ITelegramBot telegramBot, 
-            IUpdateParser updateParser, 
+            IUpdateParser updateParser,
             IOptionsSnapshot<TelegramConfiguration> options,
             ILogger<TelegramController> logger)
         {
-            this.telegramBot = telegramBot;
             this.updateParser = updateParser;
             this.options = options;
             this.logger = logger;
