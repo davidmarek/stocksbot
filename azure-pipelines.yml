@@ -12,6 +12,8 @@ pool:
 variables:
   buildConfiguration: 'Release'
   imageName: 'stocksbot'
+  azureSubscriptionEndpoint: 'davidmarek_azure_resource_manager'
+  azureContainerRegistry: 'davidmarek'
 
 steps:
 
@@ -54,18 +56,21 @@ steps:
   displayName: DockerCompose Build
   inputs:
     action: 'Build services'
+    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+    azureContainerRegistry: $(azureContainerRegistry)
     dockerComposeFile: 'docker-compose.yml'
+    projectName: $(imageName)
     workingDirectory: $(Build.SourcesDirectory)
+    qualifyImageNames: true
+    additionalImageTags: $(Build.BuildId)
 
-- script: docker login -u $(dockerId) -p $(pswd) $(dockerId).azurecr.io
-  displayName: Docker Login
-
-- task: Docker@2
-  displayName: Docker Push
+- task: DockerCompose@0
+  displayName: DockerCompose Push
   inputs:
-    command: 'push'
-    imageName: '$(dockerId).azurecr.io/$(imageName)'
-    tags: |
-      latest
-      $(Build.BuildNumber)
+    action: 'Push services'
+    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+    azureContainerRegistry: $(azureContainerRegistry)
+    projectName: $(imageName)
+    qualifyImageNames: true
+    additionalImageTags: $(Build.BuildId)
  
