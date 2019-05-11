@@ -63,7 +63,7 @@ steps:
     projectName: $(imageName)
     workingDirectory: $(Build.SourcesDirectory)
     qualifyImageNames: true
-    additionalImageTags: $(Build.BuildName)
+    additionalImageTags: $(Build.BuildNumber)
 
 - task: DockerCompose@0
   displayName: DockerCompose Push
@@ -74,5 +74,5 @@ steps:
     azureContainerRegistry: $(azureContainerRegistry)
     projectName: $(imageName)
     qualifyImageNames: true
-    additionalImageTags: $(Build.BuildName)
+    additionalImageTags: $(Build.BuildNumber)
  
