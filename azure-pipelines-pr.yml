@@ -3,14 +3,21 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 
+pr:
+  - master
+
 pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
   buildConfiguration: 'Release'
-  imageName: 'stocksbot:$(Build.BuildId)'
+  imageName: 'stocksbot:$(Build.BuildNumber)'
 
 steps:
+
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: '2.2.203'
 
 - task: DotNetCoreCLI@2
   displayName: 'DotNet Restore'
