@@ -63,6 +63,7 @@ steps:
     projectName: $(imageName)
     workingDirectory: $(Build.SourcesDirectory)
     qualifyImageNames: true
+    additionalImageTags: $(Build.BuildNumber)
 
 - task: DockerCompose@0
   displayName: DockerCompose Push
