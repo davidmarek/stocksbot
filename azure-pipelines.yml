@@ -65,7 +65,7 @@ steps:
   inputs:
     command: 'push'
     imageName: '$(dockerId).azurecr.io/$(imageName)'
-    tags:
-      - latest
-      - $(Build.BuildNumber)
+    tags: |
+      latest
+      $(Build.BuildNumber)
  
