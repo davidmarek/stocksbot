@@ -56,6 +56,7 @@ steps:
   displayName: DockerCompose Build
   inputs:
     action: 'Build services'
+    containerregistrytype: Azure Container Registry
     azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
     azureContainerRegistry: $(azureContainerRegistry)
     dockerComposeFile: 'docker-compose.yml'
@@ -68,6 +69,7 @@ steps:
   displayName: DockerCompose Push
   inputs:
     action: 'Push services'
+    containerregistrytype: Azure Container Registry
     azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
     azureContainerRegistry: $(azureContainerRegistry)
     projectName: $(imageName)
