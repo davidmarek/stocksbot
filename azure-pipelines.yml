@@ -74,5 +74,4 @@ steps:
     azureContainerRegistry: $(azureContainerRegistry)
     projectName: $(imageName)
     qualifyImageNames: true
-    additionalImageTags: $(Build.BuildNumber)
  
