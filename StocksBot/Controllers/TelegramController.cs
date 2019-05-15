@@ -1,10 +1,8 @@
-﻿using System.IO;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using StocksBot.StocksProviders;
 using StocksBot.Telegram;
 using Telegram.Bot.Types;
 
@@ -29,7 +27,7 @@ namespace StocksBot.Controllers
 
         [HttpPost]
         [Route("api/telegram/{secret}/update")]
-        public ActionResult Update(string secret, [FromBody] Update update, CancellationToken cancellationToken)
+        public async Task<ActionResult> UpdateAsync(string secret, [FromBody] Update update, CancellationToken cancellationToken)
         {
             if (secret != this.options.Value.WebhookSecret)
             {
@@ -37,7 +35,7 @@ namespace StocksBot.Controllers
                 return this.BadRequest();
             }
 
-            this.updateParser.ProcessUpdateAsync(update, cancellationToken);
+            await this.updateParser.ProcessUpdateAsync(update, cancellationToken);
             return this.Ok();
         }
     }
