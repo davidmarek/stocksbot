@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StocksBot.StocksProviders;
@@ -23,11 +24,19 @@ namespace StocksBot
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpClient();
+            services.AddStackExchangeRedisCache(options => {
+                options.Configuration = this.Configuration.GetSection("Redis").GetValue<string>("Host");
+                options.InstanceName = "Redis";
+            });
             services.Configure<TelegramConfiguration>(this.Configuration.GetSection("Telegram"));
-            services.AddTransient<IStockProvider, InvestorsExchangeStockProvider>();
-            services.AddTransient<ITelegramBotClientFactory, TelegramBotClientFactory>();
-            services.AddTransient<ITelegramBot, TelegramBot>();
-            services.AddTransient<IUpdateParser, UpdateParser>();
+            services.AddScoped<InvestorsExchangeStockProvider>();
+            services.AddScoped<IStockProvider>(provider => 
+                new CachedStockProvider(
+                    provider.GetRequiredService<InvestorsExchangeStockProvider>(), 
+                    provider.GetRequiredService<IDistributedCache>()));
+            services.AddScoped<ITelegramBotClientFactory, TelegramBotClientFactory>();
+            services.AddScoped<ITelegramBot, TelegramBot>();
+            services.AddScoped<IUpdateParser, UpdateParser>();
             services.AddSingleton(sp => new CompanyInfoProvider(sp.GetService<IStockProvider>().GetSymbolsAsync(CancellationToken.None).GetAwaiter().GetResult()));
         }
 

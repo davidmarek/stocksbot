@@ -9,7 +9,7 @@ namespace StocksBot.StocksProviders
     {
         Task<Company> GetCompanyAsync(string symbol, CancellationToken cancellationToken);
         Task<List<SymbolDescription>> GetSymbolsAsync(CancellationToken cancellationToken);
-        Task<Dictionary<string, BatchResponse>> GetQuotesAsync(IEnumerable<string> symbols, CancellationToken cancellationToken);
+        Task<IDictionary<string, BatchResponse>> GetQuotesAsync(IEnumerable<string> symbols, CancellationToken cancellationToken);
         string GetLogo(string symbol);
     }
 }

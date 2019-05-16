@@ -3,6 +3,10 @@ version: '3.4'
 services:
   stocksbot:
     image: stocksbot
+    depends_on:
+      - redis
     build:
       context: .
       dockerfile: StocksBot/Dockerfile
+  redis:
+    image: redis

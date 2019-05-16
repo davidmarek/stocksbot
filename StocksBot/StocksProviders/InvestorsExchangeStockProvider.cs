@@ -47,7 +47,7 @@ namespace StocksBot.StocksProviders
             return symbolDescriptions;
         }
 
-        public async Task<Dictionary<string, BatchResponse>> GetQuotesAsync(IEnumerable<string> symbols, CancellationToken cancellationToken)
+        public async Task<IDictionary<string, BatchResponse>> GetQuotesAsync(IEnumerable<string> symbols, CancellationToken cancellationToken)
         {
             var url = new Flurl.Url(BaseUrl)
                 .AppendPathSegment("/stock/market/batch")
