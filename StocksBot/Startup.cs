@@ -29,15 +29,22 @@ namespace StocksBot
                 options.InstanceName = "Redis";
             });
             services.Configure<TelegramConfiguration>(this.Configuration.GetSection("Telegram"));
+            services.Configure<IEXConfiguration>(this.Configuration.GetSection("IEX"));
             services.AddScoped<InvestorsExchangeStockProvider>();
-            services.AddScoped<IStockProvider>(provider => 
+            services.AddScoped<IStockProvider>(provider =>
                 new CachedStockProvider(
-                    provider.GetRequiredService<InvestorsExchangeStockProvider>(), 
+                    provider.GetRequiredService<InvestorsExchangeStockProvider>(),
                     provider.GetRequiredService<IDistributedCache>()));
             services.AddScoped<ITelegramBotClientFactory, TelegramBotClientFactory>();
             services.AddScoped<ITelegramBot, TelegramBot>();
             services.AddScoped<IUpdateParser, UpdateParser>();
-            services.AddSingleton(sp => new CompanyInfoProvider(sp.GetService<IStockProvider>().GetSymbolsAsync(CancellationToken.None).GetAwaiter().GetResult()));
+            services.AddSingleton(sp =>
+            {
+                using (var scope = sp.CreateScope())
+                {
+                    return new CompanyInfoProvider(scope.ServiceProvider.GetService<IStockProvider>().GetSymbolsAsync(CancellationToken.None).GetAwaiter().GetResult());
+                }
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

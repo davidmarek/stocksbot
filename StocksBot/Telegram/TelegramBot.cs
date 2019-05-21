@@ -1,11 +1,6 @@
-﻿using Flurl;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Telegram.Bot;
 using Telegram.Bot.Types.InlineQueryResults;
 
 namespace StocksBot.Telegram
@@ -13,12 +8,10 @@ namespace StocksBot.Telegram
     public class TelegramBot : ITelegramBot
     {
         private readonly ITelegramBotClientFactory telegramBotClientFactory;
-        private readonly TelegramConfiguration configuration;
 
-        public TelegramBot(ITelegramBotClientFactory telegramBotClientFactory, IOptionsSnapshot<TelegramConfiguration> options)
+        public TelegramBot(ITelegramBotClientFactory telegramBotClientFactory)
         {
             this.telegramBotClientFactory = telegramBotClientFactory;
-            this.configuration = options.Value;
         }
 
         public async Task ReplyAsync(string inlineQueryId, IEnumerable<InlineQueryResultBase> result, CancellationToken cancellationToken)

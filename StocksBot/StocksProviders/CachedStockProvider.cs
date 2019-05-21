@@ -74,14 +74,17 @@ namespace StocksBot.StocksProviders
             }
             await Task.WhenAll(tasks);
 
-            var quotes = await this.stockProvider.GetQuotesAsync(symbolsToFetch, cancellationToken);
-            tasks = new List<Task>();
-            foreach (var keyValue in quotes)
+            if (symbolsToFetch.Any())
             {
-                tasks.Add(SaveToCache(keyValue.Key, keyValue.Value));
-                result[keyValue.Key] = keyValue.Value;
+                var quotes = await this.stockProvider.GetQuotesAsync(symbolsToFetch, cancellationToken);
+                tasks = new List<Task>();
+                foreach (var keyValue in quotes)
+                {
+                    tasks.Add(SaveToCache(keyValue.Key, keyValue.Value));
+                    result[keyValue.Key] = keyValue.Value;
+                }
+                await Task.WhenAll(tasks);
             }
-            await Task.WhenAll(tasks);
 
             return result;
 
