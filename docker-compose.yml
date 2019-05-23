@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   stocksbot:
-    image: stocksbot
+    image: davidmarek.azurecr.io/stocksbot
     depends_on:
       - redis
     build:
