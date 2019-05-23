@@ -74,4 +74,8 @@ steps:
     azureContainerRegistry: $(azureContainerRegistry)
     projectName: $(imageName)
     qualifyImageNames: true
- 
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.SourcesDirectory)/docker-compose.yml'
+    artifactName: docker_compose
